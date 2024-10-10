@@ -14,6 +14,9 @@ class Graph:
     def add_edge(self, node_one, node_two):
         self.network[node_one].append(node_two)
         self.network[node_two].append(node_one)
+    
+    def get_edges(self, node):
+        return self.network[node]
 
     def print_network(self):
         pprint.pp(self.network)
@@ -45,3 +48,55 @@ graph.add_edge('Q', 'R')
 # Check out the internals
 graph.print_network()
 
+
+
+def depth_first(graph, start, end):
+    stack = [start]
+    path_found = False
+    history = dict()
+    visited = set()
+
+    while len(stack) and not path_found:
+        # Get the next node to search through
+        node = stack.pop(0)
+
+        # If we have already visited here, skip this
+        # loop
+        if node in visited:
+            continue
+        
+        # Check if we have found our goal
+        if node == end:
+            return history
+
+        # Add the node to our list of visited
+        visited.add(node)
+
+        # Now add all the edges together
+        for child in graph.get_edges(node):
+            if child not in visited:
+                stack.insert(0, child)
+                history[child] = node
+    
+    # If we got here, there isn't a path between
+    # the two nodes
+    return None
+
+
+def history_to_path(history, start, end):
+    path = []
+    current = end
+
+    while current != start:
+        path.insert(0, current)
+        current = history[current]
+    path.insert(0, current)
+    print(path)
+
+print('\nDepth First: Q -> A')
+history = depth_first(graph, 'Q', 'A')
+history_to_path(history, 'Q', 'A')
+
+print('\nDepth First: M -> A')
+history = depth_first(graph, 'M', 'A')
+history_to_path(history, 'M', 'A')
