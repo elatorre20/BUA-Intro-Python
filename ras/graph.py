@@ -52,11 +52,10 @@ graph.print_network()
 
 def depth_first(graph, start, end):
     stack = [start]
-    path_found = False
     history = dict()
     visited = set()
 
-    while len(stack) and not path_found:
+    while len(stack) > 0:
         # Get the next node to search through
         node = stack.pop(0)
 
@@ -82,7 +81,6 @@ def depth_first(graph, start, end):
     # the two nodes
     return None
 
-
 def history_to_path(history, start, end):
     path = []
     current = end
@@ -99,4 +97,45 @@ history_to_path(history, 'Q', 'A')
 
 print('\nDepth First: M -> A')
 history = depth_first(graph, 'M', 'A')
+history_to_path(history, 'M', 'A')
+
+
+def breadth_first(graph, start, end):
+    stack = [start]
+    history = dict()
+    visited = set()
+
+    while len(stack) > 0:
+        # Get the next node to search through
+        node = stack.pop(0)
+
+        # If we have already visited here, skip this
+        # loop
+        if node in visited:
+            continue
+        
+        # Check if we have found our goal
+        if node == end:
+            return history
+
+        # Add the node to our list of visited
+        visited.add(node)
+
+        # Now add all the edges together
+        for child in graph.get_edges(node):
+            if child not in visited:
+                stack.append(child)
+                history[child] = node
+    
+    # If we got here, there isn't a path between
+    # the two nodes
+    return None
+
+
+print('\nBreadth First: Q -> A')
+history = depth_first(graph, 'Q', 'A')
+history_to_path(history, 'Q', 'A')
+
+print('\nBreadth First: M -> A')
+history = breadth_first(graph, 'M', 'A')
 history_to_path(history, 'M', 'A')
