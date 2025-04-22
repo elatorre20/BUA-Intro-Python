@@ -23,7 +23,7 @@ class ticTacToeGame():
         #put a move into the board
         self.board[cell[0]][cell[1]] = player #note that cell is a list because we have an x and y coordinate, so we index into it to get those coordinates
         
-    def check_win(self):
+    def check_win(self, player = ):
         #check whether someone has won the game
         #check horizontals
         for i in range(len(self.board)): #iterate through the rows
@@ -75,5 +75,4 @@ class ticTacToeGame():
             self.currentPlayer = 'x'
         print(self)
         
-x = ticTacToeGame()
-y = ticTacToeGame()
+    
