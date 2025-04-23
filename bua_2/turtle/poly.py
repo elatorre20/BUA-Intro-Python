@@ -28,14 +28,15 @@ def add_poly_to_sprite(sprite, sides, length, color, position, angle, fill):
     
 turtle.clearscreen()
 t = turtle.Turtle()
+t.speed(0)
 mondrian = {}
 add_poly_to_sprite(mondrian, 4, 140, "black", (-100,0), 45, True)
 add_poly_to_sprite(mondrian, 4, 60, "blue", (-5,0), 225, True)
 add_poly_to_sprite(mondrian, 4, 60, "red", (5,0), 45, True)
 add_poly_to_sprite(mondrian, 4, 60, "yellow", (0,5), 135, True)
-add_poly_to_sprite(mondrian, 4, 25, "blue", (-5,-(math.sqrt(1800))), 225, True)
-add_poly_to_sprite(mondrian, 4, 25, "red", (5,-(math.sqrt(1800))), 45, True)
-add_poly_to_sprite(mondrian, 4, 25, "yellow", (0,-(math.sqrt(1800))+3), 135, True)
-add_poly_to_sprite(mondrian, 4, 25, "white", (0,-(math.sqrt(1800))-3), 315, True)
+add_poly_to_sprite(mondrian, 4, 25, "blue", (-5,-(math.sqrt(1800))-4), 225, True)
+add_poly_to_sprite(mondrian, 4, 25, "red", (5,-(math.sqrt(1800))-4), 45, True)
+add_poly_to_sprite(mondrian, 4, 25, "yellow", (0,-(math.sqrt(1800))-1), 135, True)
+add_poly_to_sprite(mondrian, 4, 25, "white", (0,-(math.sqrt(1800))-7), 315, True)
 draw_sprite(t, mondrian)
     
