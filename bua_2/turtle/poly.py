@@ -1,42 +1,36 @@
 import turtle
-import random
 import math
 
-def draw_regular_polygon(t, sides, length, color, position, angle, fill):
-    t.penup()
-    t.goto(position)
-    t.pendown()
+def draw_poly(t, points, color, fill):
+    print(points)
+    print(points[0])
     t.pencolor(color)
-    t.setheading(angle)
-    internal_angle = 180-(180*(sides-2)/sides)
+    t.penup()
+    t.goto(points[0])
+    t.pendown()
     if(fill):
         t.fillcolor(color)
         t.begin_fill()
-    for i in range(sides):
-        t.forward(length)
-        t.right(internal_angle)
+    for i in points:
+        t.goto(i)
+    t.goto(points[0])
     if(fill):
         t.end_fill()
         
 def draw_sprite(t, sprite):
     for i in sprite:
         poly = sprite[i]
-        draw_regular_polygon(t, sides = poly["sides"], length = poly["length"], color = poly["color"], position = poly["position"], angle = poly["angle"], fill = poly["fill"])
+        draw_poly(t, points = poly["points"], color = poly["color"], fill = poly["fill"])
 
-def add_poly_to_sprite(sprite, sides, length, color, position, angle, fill):
-    sprite[len(sprite)] = {"sides": sides, "length": length, "color": color, "position": position, "angle": angle, "fill": fill}
+def add_poly_to_sprite(sprite, points, color, fill):
+    sprite[len(sprite)] = {"points": points, "color": color, "fill": fill}
     
 turtle.clearscreen()
 t = turtle.Turtle()
 t.speed(0)
 mondrian = {}
-add_poly_to_sprite(mondrian, 4, 140, "black", (-100,0), 45, True)
-add_poly_to_sprite(mondrian, 4, 60, "blue", (-5,0), 225, True)
-add_poly_to_sprite(mondrian, 4, 60, "red", (5,0), 45, True)
-add_poly_to_sprite(mondrian, 4, 60, "yellow", (0,5), 135, True)
-add_poly_to_sprite(mondrian, 4, 25, "blue", (-5,-(math.sqrt(1800))-4), 225, True)
-add_poly_to_sprite(mondrian, 4, 25, "red", (5,-(math.sqrt(1800))-4), 45, True)
-add_poly_to_sprite(mondrian, 4, 25, "yellow", (0,-(math.sqrt(1800))-1), 135, True)
-add_poly_to_sprite(mondrian, 4, 25, "white", (0,-(math.sqrt(1800))-7), 315, True)
+add_poly_to_sprite(mondrian, [(-200,-100),(-200,100),(200,100),(200,-100)], "black", True)
+add_poly_to_sprite(mondrian, [(-220,10),(-220,120),(70,120),(70,10)], "yellow", True)
+add_poly_to_sprite(mondrian, [(-180,-90),(-180,-10),(170,-10),(170,-90)], "blue", True)
+add_poly_to_sprite(mondrian, [(90,10),(90,120),(220,120),(220,10)], "red", True)
 draw_sprite(t, mondrian)
-    
