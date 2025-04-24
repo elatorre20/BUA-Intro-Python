@@ -2,8 +2,6 @@ import turtle
 import math
 
 def draw_poly(t, points, color, fill):
-    print(points)
-    print(points[0])
     t.pencolor(color)
     t.penup()
     t.goto(points[0])
