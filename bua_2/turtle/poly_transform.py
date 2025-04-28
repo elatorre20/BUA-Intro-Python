@@ -36,6 +36,16 @@ def scale_poly(points, x, y):
         y0 = points[i][1]
         points[i] = (x0 * x, y0 * y)
         
+def mirror_poly(points, x, y):
+    for i in range(len(points)):
+        x1 = points[i][0]
+        y1 = points[i][1]
+        if(x):
+            x1 = x1 * -1
+        if(y):
+            y1 = y1 * -1
+        points[i] = (x1, y1)
+        
 def translate_sprite(sprite, x, y):
     for i in sprite:
         translate_poly(sprite[i]["points"], x, y)
