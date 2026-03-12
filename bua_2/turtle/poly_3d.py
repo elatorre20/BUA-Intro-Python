@@ -87,6 +87,7 @@ def add_poly_to_sprite(sprite, points, color, fill):
 turtle.clearscreen()
 t = turtle.Turtle()
 t.hideturtle()
+turtle.tracer(0)
 t.speed(0)
 cube = {}
 add_poly_to_sprite(cube, [( 100,100,100),(-100,100,100),(-100,-100,100),(100,-100,100)], "red", True)
@@ -119,3 +120,5 @@ rotate_sprite(cube, math.pi/3, 'y')
 rotate_sprite(cube, math.pi/3, 'z')
 translate_sprite(cube, 50, 50, 0)
 draw_sprite(t, cube)
+turtle.update()
+turtle.done()
