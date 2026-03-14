@@ -2,10 +2,17 @@ import turtle
 import math
 import time
 
-ambient=(-100,-100,-100)
+ambient=-100 #magnitude applied to all polygons, simulates ambient light
+directional=(0,-1,0)#magnitude-1 vector representing a directional source
+
+def vec3_cross_product(a,b):
+    
+def get_poly_normal(points):
+
 def draw_poly(t, points, color, fill):
     #calculate the lighting
-    color = (color[0]+ambient[0], color[1]+ambient[1], color[2]+ambient[2])
+    color = (color[0]+ambient, color[1]+ambient, color[2]+ambient) #apply ambient lighting
+    
     color = (max(color[0],0),max(color[1],0),max(color[2],0))
     #start drawing the polygon
     t.pencolor(color)
