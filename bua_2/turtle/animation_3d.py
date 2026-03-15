@@ -2,18 +2,39 @@ import turtle
 import math
 import time
 
-ambient=-100 #magnitude applied to all polygons, simulates ambient light
-directional=(0,-1,0)#magnitude-1 vector representing a directional source
+
 
 def vec3_cross_product(a,b):
+    c0 = (a[1]*b[2]) - (a[2]*b[1])
+    c1 = (a[2]*b[0]) - (a[0]*b[2])
+    c2 = (a[0]*b[1]) - (a[1]*b[0])
+    return (c0,c1,c2)
+
+def vec3_dot_product(a,b):
+    return(a[0]*b[0])+(a[1]*b[1])+(a[2]*b[2])
+
+def vec3_sub(a,b):
+    return (a[0]-b[0],a[1]-b[1],a[2]-b[2])
+
+def vec3_normalize(a):
+    magnitude=math.sqrt((a[0]*a[0])+(a[1]*a[1])+(a[2]*a[2]))
+    return (a[0]/magnitude,a[1]/magnitude,a[2]/magnitude)
     
 def get_poly_normal(points):
+    a = vec3_sub(points[1], points[0])
+    b = vec3_sub(points[2], points[1])
+    return(vec3_normalize(vec3_cross_product(a,b)))
 
+ambient=0.9 #magnitude applied to all polygons, simulates ambient light
+directional=vec3_normalize((0,-1,-1))#magnitude-1 vector representing a directional source
 def draw_poly(t, points, color, fill):
     #calculate the lighting
-    color = (color[0]+ambient, color[1]+ambient, color[2]+ambient) #apply ambient lighting
-    
-    color = (max(color[0],0),max(color[1],0),max(color[2],0))
+    color = (color[0]*ambient, color[1]*ambient, color[2]*ambient) #apply ambient lighting
+    lighting_cos = vec3_dot_product(directional, get_poly_normal(points))
+    color = (color[0]*lighting_cos,color[1]*lighting_cos,color[2]*lighting_cos)
+    color = (max(color[0],0),max(color[1],0),max(color[2],0)) 
+    color = (min(color[0],255),min(color[1],255),min(color[2],255))#ensure that lighting is within range
+    color = (int(color[0]),int(color[1]),int(color[2]))
     #start drawing the polygon
     t.pencolor(color)
     t.penup()
@@ -96,33 +117,65 @@ def draw_sprite(t, sprite):
 
 def add_poly_to_sprite(sprite, points, color, fill):
     sprite[len(sprite)] = {"points": points, "color": color, "fill": fill}
-    
-def cube(dim, colors, x=0, y=0):
+
+def tetrahedron(dim, colors=[], x=0, y=0):
+    if colors == []:
+        colors = [(255,0,0),(0,255,0),(0,0,255),(255,255,0)]
+    tetrahedron = {}
+    h = dim/math.sqrt(2)
+    add_poly_to_sprite(tetrahedron, [( x, y, h),( dim/2+x,-dim/2+y,0),(-dim/2+x,-dim/2+y,0)], colors[0], True)
+    add_poly_to_sprite(tetrahedron, [( x, y, h),( dim/2+x, dim/2+y,0),( dim/2+x,-dim/2+y,0)], colors[1], True)
+    add_poly_to_sprite(tetrahedron, [( x, y, h),(-dim/2+x, dim/2+y,0),( dim/2+x, dim/2+y,0)], colors[2], True)
+    add_poly_to_sprite(tetrahedron, [(-dim/2+x,-dim/2+y,0),( dim/2+x,-dim/2+y,0),( dim/2+x, dim/2+y,0),(-dim/2+x, dim/2+y,0)], colors[3], True)
+    return tetrahedron
+
+def cube(dim, colors=[], x=0, y=0):
+    if colors == []:
+        colors = [(255,0,0),(0,255,0),(0,0,255),(255,255,0),(255,0,255),(0,255,255)]
     cube = {}
-    add_poly_to_sprite(cube, [( dim/2+x,dim/2+y,dim/2),(-dim/2+x,dim/2+y,dim/2),(-dim/2+x,-dim/2+y,dim/2),(dim/2+x,-dim/2+y,dim/2)], colors[0], True)
+    add_poly_to_sprite(cube, [( dim/2+x,dim/2+y,dim/2),(dim/2+x,-dim/2+y,dim/2),(-dim/2+x,-dim/2+y,dim/2),(-dim/2+x,dim/2+y,dim/2)], colors[0], True)
     add_poly_to_sprite(cube, [(dim/2+x,dim/2+y,dim/2),(-dim/2+x,dim/2+y,dim/2),(-dim/2+x,dim/2+y,-dim/2),(dim/2+x,dim/2+y,-dim/2)], colors[1], True)
-    add_poly_to_sprite(cube, [(-dim/2+x,dim/2+y,dim/2),(-dim/2+x,dim/2+y,-dim/2),(-dim/2+x,-dim/2+y,-dim/2),(-dim/2+x,-dim/2+y,dim/2)], colors[2], True)
-    add_poly_to_sprite(cube, [(dim/2+x,dim/2+y,dim/2),(dim/2+x,-dim/2+y,dim/2),(dim/2+x,-dim/2+y,-dim/2),(dim/2+x,dim/2+y,-dim/2)], colors[3], True)
-    add_poly_to_sprite(cube, [(dim/2+x,-dim/2+y,dim/2),(-dim/2+x,-dim/2+y,dim/2),(-dim/2+x,-dim/2+y,-dim/2),(dim/2+x,-dim/2+y,-dim/2)], colors[4], True)
+    add_poly_to_sprite(cube, [(-dim/2+x,dim/2+y,dim/2),(-dim/2+x,-dim/2+y,dim/2),(-dim/2+x,-dim/2+y,-dim/2),(-dim/2+x,dim/2+y,-dim/2)], colors[2], True)
+    add_poly_to_sprite(cube, [(dim/2+x,dim/2+y,dim/2),(dim/2+x,dim/2+y,-dim/2),(dim/2+x,-dim/2+y,-dim/2),(dim/2+x,-dim/2+y,dim/2)], colors[3], True)
+    add_poly_to_sprite(cube, [(dim/2+x,-dim/2+y,dim/2),(dim/2+x,-dim/2+y,-dim/2),(-dim/2+x,-dim/2+y,-dim/2),(-dim/2+x,-dim/2+y,dim/2)], colors[4], True)
     add_poly_to_sprite(cube, [(-dim/2+x,-dim/2+y,-dim/2),(dim/2+x,-dim/2+y,-dim/2),(dim/2+x,dim/2+y,-dim/2),(-dim/2+x,dim/2+y,-dim/2)], colors[5], True)
     return cube
 
-colors = [(255,0,0),(0,255,0),(0,0,255),(255,255,0),(255,0,255),(0,255,255)]
-
+def octahedron(dim, colors=[], x=0, y=0):
+    if colors == []:
+        colors = [(255,0,0),(0,255,0),(0,0,255),(255,255,0),(255,0,255),(0,255,255),(255,128,0),(128,0,255)]
+    octahedron = {}
+    r = dim/2
+    add_poly_to_sprite(octahedron, [( x, y, r),( r+x, y,0),( y+x, r+y,0)], colors[0], True)
+    add_poly_to_sprite(octahedron, [( x, y, r),( y+x, r+y,0),(-r+x, y,0)], colors[1], True)
+    add_poly_to_sprite(octahedron, [( x, y, r),(-r+x, y,0),( y+x,-r+y,0)], colors[2], True)
+    add_poly_to_sprite(octahedron, [( x, y, r),( y+x,-r+y,0),( r+x, y,0)], colors[3], True)
+    add_poly_to_sprite(octahedron, [( x, y,-r),( y+x, r+y,0),( r+x, y,0)], colors[4], True)
+    add_poly_to_sprite(octahedron, [( x, y,-r),(-r+x, y,0),( y+x, r+y,0)], colors[5], True)
+    add_poly_to_sprite(octahedron, [( x, y,-r),( y+x,-r+y,0),(-r+x, y,0)], colors[6], True)
+    add_poly_to_sprite(octahedron, [( x, y,-r),( r+x, y,0),( y+x,-r+y,0)], colors[7], True)
+    return octahedron
 
 screen = turtle.Screen()
 screen.clear()
 screen.colormode(255)
-print(turtle.colormode())
 t = turtle.Turtle()
 t.hideturtle()
 t.speed(0)
 turtle.tracer(0)
-cube = cube(50, colors)
+tetrahedron = tetrahedron(50,x=-100,y=0)
+cube = cube(50)
+octahedron = octahedron(50,x=100,y=0)
+rotate_sprite(tetrahedron, math.pi/3, 'x')
 rotate_sprite(cube, math.pi/3, 'y')
+rotate_sprite(octahedron, math.pi/3, 'x')
 while(True):
     t.clear()
-    rotate_sprite(cube, math.pi/32, 'x')
+    rotate_sprite(tetrahedron, math.pi/64, 'y')
+    rotate_sprite(cube, math.pi/64, 'x')
+    rotate_sprite(octahedron, math.pi/64, 'y')
+    draw_sprite(t, tetrahedron)
     draw_sprite(t, cube)
+    draw_sprite(t, octahedron)
     turtle.update()
-    time.sleep(0.03)
+    time.sleep(1/30)
