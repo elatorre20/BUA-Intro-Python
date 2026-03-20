@@ -25,7 +25,7 @@ def get_poly_normal(points):
     b = vec3_sub(points[2], points[1])
     return(vec3_normalize(vec3_cross_product(a,b)))
 
-ambient=0.9 #magnitude applied to all polygons, simulates ambient light
+ambient=1.0 #magnitude applied to all polygons, simulates ambient light
 directional=vec3_normalize((0,-1,-1))#magnitude-1 vector representing a directional source
 def draw_poly(t, points, color, fill):
     #calculate the lighting
